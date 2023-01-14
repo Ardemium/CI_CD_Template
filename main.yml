@@ -1,0 +1,31 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: |
+        # Run your tests here
+        echo "Running tests..."
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to Raspberry Pi
+      uses: actions/ssh-action@v1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        host: raspberrypi.local
+        username: pi
+        script: |
+          # Run commands to deploy code to your Raspberry Pi here
+          echo "Deploying code to Raspberry Pi..."
