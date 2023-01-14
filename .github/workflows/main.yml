@@ -34,5 +34,4 @@ jobs:
           cd deployment
           cd docker-compose
           sudo docker-compose up -d
-          ${{ secrets.PASSWORD }}
 
