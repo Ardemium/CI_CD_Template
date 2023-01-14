@@ -1,15 +1,15 @@
 version: "3.9"  # optional since v1.27.0
 services:
-  TodoApi:
-    container_name: TodoApi
+  todoapi:
+    container_name: todoapi
     build:
       context: .
       dockerfile: ../../code/TodoApi/Dockerfile
     ports:
       - "8080:80"
     restart: always
-  my-app:
-    container_name: "my-app"
+  myapp:
+    container_name: "myapp"
     build:
       context: .
       dockerfile: ../../code/my-app/Dockerfile
