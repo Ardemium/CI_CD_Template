@@ -21,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy to Raspberry Pi
-      uses: actions/ssh-action@v1
+      uses: appleboy/ssh-action@v0.1.7
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        host: ${{ secrets.HOST_DOMAIN }}
-        username: ${{ secrets.HOST_USERNAME }}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
         script: |
           # Run commands to deploy code to your Raspberry Pi here
           echo "Deploying code to Raspberry Pi..."
