@@ -29,5 +29,9 @@ jobs:
         script: |
           # Run commands to deploy code to your Raspberry Pi here
           echo "Deploying code to Raspberry Pi..."
+          cd TheaterLaak
+          git pull
+          cd deployment
+          cd docker-compose
           docker-compose up -d
 
