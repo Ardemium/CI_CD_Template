@@ -24,8 +24,10 @@ jobs:
       uses: actions/ssh-action@v1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        host: raspberrypi.local
-        username: pi
+        host: ${{ secrets.HOST_DOMAIN }}
+        username: ${{ secrets.HOST_USERNAME }}
         script: |
           # Run commands to deploy code to your Raspberry Pi here
           echo "Deploying code to Raspberry Pi..."
+          docker-compose up -d
+
