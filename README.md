@@ -1,34 +1,29 @@
-#CI/CD Template
+CI/CD Template
+This is a CI/CD template for automating the deployment of containerized microservices on a server.
 
-This template provides a basic setup for a CI/CD pipeline using an containerized nginx reverse proxy, a micro frontend, and a micro backend.
-Requirements
+Prerequisites
+SSH access to the server
+GitHub repository for storing secrets
+Docker and Docker Compose installed on the server
 
-    Docker
-    Docker Compose
+Setup
+Clone this repository to the server location after an SSH connection.
+Add HOST, USERNAME, and KEY as secrets in your GitHub repository.
+Generate an SSH key using ssh-keygen -t rsa and add it to the server's authorized keys.
+Update the docker-compose.yml and nginx.conf files for adding new microservices.
+Configure firewall and limit user's sudo privileges to necessary commands such as docker-compose up.
+Use SSH certificates and do not store the private key on the server.
 
-Usage
+Deployment
+To deploy updates, push changes to the GitHub repository and they will be automatically pulled and deployed on the server.
 
-    Clone the repository.
-    Add secrets to github
-    Access the application on http://localhost:80.
+Communication
+Communication between containers is controlled by an nginx reverse proxy container.
 
-CI/CD Pipeline
-
-The pipeline is configured to automatically build and deploy the application whenever changes are pushed to the master branch.
-Troubleshooting
-
-If you encounter any issues, check the logs using docker-compose logs or portainer and make sure that all required ports are available.
-Note
-
-    Update the config files with the name of the container.
-
-Tech Stack
-
-    nginx
-    Docker
-    Docker Compose
-    Microservices
-
-Contribution
-
-If you find any bugs or have suggestions for improvements, feel free to open an issue or make a pull request.
+Tips
+Test changes locally before deploying to the server
+Keep the server's package manager updated
+Regularly check logs for errors and issues
+Feel free to use, modify, and distribute this template.
+It's a comprehensive solution but it may not cover all scenarios and may contain errors.
+It's recommended to test it locally and customize it to fit your needs.
