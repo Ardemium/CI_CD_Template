@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TodoApi.Controllers;
-[Authorize]
+[Authorize(Roles = "admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase

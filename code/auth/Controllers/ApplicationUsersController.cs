@@ -55,11 +55,16 @@ namespace TodoApi.Controllers
                 return Unauthorized();
             }
 
-            var claims = new[]
-            {
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new List<Claim>
+    {
         new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
     };
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim("role", role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetValue<string>("JWT:SigningKey")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

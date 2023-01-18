@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : IdentityDbContext
@@ -9,4 +9,6 @@ public class ApplicationDbContext : IdentityDbContext
     }
 
     public DbSet<ApplicationUser> TodoIteApplicationUsers { get; set; } = null!;
+
+    public DbSet<ApplicationUserRole> ApplicationUserRole { get; set; } = default!;
 }
