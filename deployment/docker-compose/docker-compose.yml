@@ -26,3 +26,19 @@ services:
     depends_on:
       - todoapi
       - myapp
+  authapi:
+    container_name: authapi
+    build:
+      context: ../../code/auth
+      dockerfile: ../../code/auth/Dockerfile
+    ports:
+      - "8082:80"
+    restart: always
+  authzapi:
+    container_name: authzapi
+    build:
+      context: ../../code/authz
+      dockerfile: ../../code/authz/Dockerfile
+    ports:
+      - "8081:80"
+    restart: always
