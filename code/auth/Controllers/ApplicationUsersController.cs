@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -22,11 +23,10 @@ namespace TodoApi.Controllers
             _config = config;
         }
 
-        // POST: api/ApplicationUsers/register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] ApplicationUserDTO applicationUserDTO)
         {
-            var user = new ApplicationUser { UserName = applicationUserDTO.UserName, Email = applicationUserDTO.Email };
+            var user = new ApplicationUser { UserName = applicationUserDTO.UserName };
 
             var result = await _userManager.CreateAsync(user, applicationUserDTO.Password);
 
@@ -39,11 +39,10 @@ namespace TodoApi.Controllers
             return Ok();
         }
 
-        // POST: api/ApplicationUsers/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] ApplicationUserDTO applicationUserDTO)
         {
-            var user = await _userManager.FindByEmailAsync(applicationUserDTO.Email);
+            var user = await _userManager.FindByNameAsync(applicationUserDTO.UserName);
             if (user == null)
             {
                 return Unauthorized();
@@ -57,13 +56,14 @@ namespace TodoApi.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
-    {
-        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("userId", user.Id)
+            };
             foreach (var role in roles)
             {
-                claims.Add(new Claim("role", role));
+                claims.Add(new Claim("roles", role));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetValue<string>("JWT:SigningKey")));
@@ -74,23 +74,22 @@ namespace TodoApi.Controllers
                 _config.GetValue<string>("JWT:Issuer"),
                 claims,
                 expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
+signingCredentials: creds);
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
 
-        // PUT: api/ApplicationUsers/modify
+        [Authorize]
         [HttpPut("modify")]
-        public async Task<IActionResult> Modify([FromBody] ApplicationUserDTO applicationUserDTO)
+        public async Task<IActionResult> Modify([FromBody] UpdatePasswordDTO updatePasswordDTO)
         {
-            var user = await _userManager.FindByEmailAsync(applicationUserDTO.Email);
-
+            var userId = User.FindFirst("userId")?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var result = await _userManager.ChangePasswordAsync(user, applicationUserDTO.Password, applicationUserDTO.Password);
+            var result = await _userManager.ChangePasswordAsync(user, updatePasswordDTO.OldPassword, updatePasswordDTO.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -100,12 +99,12 @@ namespace TodoApi.Controllers
             return Ok();
         }
 
-        // DELETE: api/ApplicationUsers/delete
+        [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] ApplicationUserDTO applicationUserDTO)
+        public async Task<IActionResult> Delete()
         {
-            var user = await _userManager.FindByEmailAsync(applicationUserDTO.Email);
-
+            var userId = User.FindFirst("userId")?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound();
@@ -117,7 +116,10 @@ namespace TodoApi.Controllers
             {
                 return BadRequest(result.Errors);
             }
+
             return Ok();
         }
+
+
     }
 }

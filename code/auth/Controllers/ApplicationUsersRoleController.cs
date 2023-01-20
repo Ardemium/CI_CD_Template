@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ public class ApplicationUsersRoleController : ControllerBase
     [HttpPost("assignrole")]
     public async Task<IActionResult> AssignRole([FromBody] ApplicationUserRoleDTO userRoleDTO)
     {
-        var user = await _userManager.FindByEmailAsync(userRoleDTO.Email);
+        var user = await _userManager.FindByNameAsync(userRoleDTO.UserName);
         if (user == null)
         {
             return NotFound();
@@ -31,6 +32,10 @@ public class ApplicationUsersRoleController : ControllerBase
         {
             return BadRequest("The role does not exist");
         }
+        if (userRoleDTO.Role == "root")
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, "The root role cannot be assigned.");
+        }
 
         var result = await _userManager.AddToRoleAsync(user, userRoleDTO.Role);
         if (!result.Succeeded)
@@ -40,14 +45,19 @@ public class ApplicationUsersRoleController : ControllerBase
 
         return Ok();
     }
-        // POST: api/ApplicationUsersRole/removerole
+    // POST: api/ApplicationUsersRole/removerole
     [HttpPost("removerole")]
     public async Task<IActionResult> RemoveRole([FromBody] ApplicationUserRoleDTO userRoleDTO)
     {
-        var user = await _userManager.FindByEmailAsync(userRoleDTO.Email);
+        var user = await _userManager.FindByNameAsync(userRoleDTO.UserName);
         if (user == null)
         {
             return NotFound();
+        }
+
+        if (userRoleDTO.Role == "root")
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, "The root role cannot be removed.");
         }
 
         var result = await _userManager.RemoveFromRoleAsync(user, userRoleDTO.Role);
@@ -60,10 +70,10 @@ public class ApplicationUsersRoleController : ControllerBase
     }
 
     // GET: api/ApplicationUsersRole/userroles/email@email.com
-    [HttpGet("userroles/{email}")]
-    public async Task<IActionResult> GetUserRoles(string email)
+    [HttpGet("userroles/{userName}")]
+    public async Task<IActionResult> GetUserRoles(string userName)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByNameAsync(userName);
         if (user == null)
         {
             return NotFound();

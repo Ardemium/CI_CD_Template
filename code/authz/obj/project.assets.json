@@ -1377,11 +1377,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Arthu\\Desktop\\CI_CD_Template\\code\\authz\\authz.csproj",
+      "projectUniqueName": "C:\\Users\\Arthu\\Desktop\\authz\\authz.csproj",
       "projectName": "authz",
-      "projectPath": "C:\\Users\\Arthu\\Desktop\\CI_CD_Template\\code\\authz\\authz.csproj",
+      "projectPath": "C:\\Users\\Arthu\\Desktop\\authz\\authz.csproj",
       "packagesPath": "C:\\Users\\Arthu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Arthu\\Desktop\\CI_CD_Template\\code\\authz\\obj\\",
+      "outputPath": "C:\\Users\\Arthu\\Desktop\\authz\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

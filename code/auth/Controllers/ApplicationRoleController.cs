@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
+
 namespace auth.Controllers
 {
+    [Authorize(Roles = "root")]
     [Route("api/[controller]")]
     [ApiController]
     public class ApplicationRoleController : ControllerBase
@@ -55,13 +58,17 @@ namespace auth.Controllers
 
 
         // PUT: api/ApplicationRole/5
-[HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutApplicationRole(string id, ApplicationRoleDTO applicationRoleDTO)
         {
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
                 return NotFound();
+            }
+            if (role.Name == "root")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The root role cannot be modified.");
             }
             role.Name = applicationRoleDTO.RoleName;
             var result = await _roleManager.UpdateAsync(role);
@@ -81,6 +88,10 @@ namespace auth.Controllers
             if (role == null)
             {
                 return NotFound();
+            }
+            if (role.Name == "root")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The root role cannot be deleted.");
             }
             var result = await _roleManager.DeleteAsync(role);
             if (!result.Succeeded)

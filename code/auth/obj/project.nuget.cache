@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1QbKiGWNMsccdiZFEv9Dn5vwYynl0DoUHR8dSL6fAcoemmBy4fbtpNOkFseNzPHd4+HU5/YMsB8T1/zoj/JyQg==",
+  "dgSpecHash": "n1GITfaqa4NJvVKVC/MQhAtuGQffycU2HxiRHy6HIYlhf1/s5YCVkmHGc+wO6nKkG3iwKMcdICPkUxesjNPXcg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Arthu\\Desktop\\CI_CD_Template\\code\\auth\\auth.csproj",
+  "projectFilePath": "C:\\Users\\Arthu\\Desktop\\auth\\auth.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Arthu\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Arthu\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
