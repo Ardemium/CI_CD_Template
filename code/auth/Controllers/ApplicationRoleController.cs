@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace auth.Controllers
 {
     [Authorize(Roles = "root")]
-    [Route("api/auth/[controller]")]
+    [Route("api/authapi/[controller]")]
     [ApiController]
     public class ApplicationRoleController : ControllerBase
     {

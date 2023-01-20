@@ -16,16 +16,6 @@ services:
     ports:
       - "3000:3000"
     restart: always
-  reverse_proxy:
-    container_name: reverse_proxy
-    build:
-      context: ../reverse_proxy
-      dockerfile: ../reverse_proxy/Dockerfile
-    ports:
-      - 80:80
-    depends_on:
-      - todoapi
-      - myapp
   authapi:
     container_name: authapi
     build:
@@ -42,3 +32,15 @@ services:
     ports:
       - "8081:80"
     restart: always
+  reverse_proxy:
+    container_name: reverse_proxy
+    build:
+      context: ../reverse_proxy
+      dockerfile: ../reverse_proxy/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - todoapi
+      - myapp
+      - authapi
+      - authzapi

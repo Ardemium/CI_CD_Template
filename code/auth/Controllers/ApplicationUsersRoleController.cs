@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
-    [Route("api/auth/[controller]")]
+[Authorize(Roles = "root,admin")]
+[Route("api/authapi/[controller]")]
 [ApiController]
 public class ApplicationUsersRoleController : ControllerBase
 {

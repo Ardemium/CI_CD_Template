@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace TodoApi.Controllers;
 [Authorize(Roles = "admin")]
 [ApiController]
-[Route("api/authz/[controller]")]
+[Route("api/authzapi/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
