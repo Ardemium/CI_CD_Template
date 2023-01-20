@@ -4,7 +4,7 @@ using TodoApi.Models;
 
 namespace TodoApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/todoapi/[controller]")]
 [ApiController]
 public class TodoItemsController : ControllerBase
 {

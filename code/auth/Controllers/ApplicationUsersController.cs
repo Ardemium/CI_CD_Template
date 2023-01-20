@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth/[controller]")]
     [ApiController]
     public class ApplicationUsersController : ControllerBase
     {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
+    [Route("api/auth/[controller]")]
 [ApiController]
 public class ApplicationUsersRoleController : ControllerBase
 {
