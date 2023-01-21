@@ -19,17 +19,21 @@ public class TodoItemsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
     {
+        var userId = GetUserIdFromJWT();
         return await _context.TodoItems
+            .Where(x => x.UserId == userId)
             .Select(x => ItemToDTO(x))
             .ToListAsync();
     }
 
     // GET: api/TodoItems/5
-    // <snippet_GetByID>
     [HttpGet("{id}")]
     public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
+        var userId = GetUserIdFromJWT();
+        var todoItem = await _context.TodoItems
+                            .Where(x => x.UserId == userId && x.Id == id)
+                            .FirstOrDefaultAsync();
 
         if (todoItem == null)
         {
@@ -38,20 +42,16 @@ public class TodoItemsController : ControllerBase
 
         return ItemToDTO(todoItem);
     }
-    // </snippet_GetByID>
 
     // PUT: api/TodoItems/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    // <snippet_Update>
     [HttpPut("{id}")]
     public async Task<IActionResult> PutTodoItem(long id, TodoItemDTO todoDTO)
     {
-        if (id != todoDTO.Id)
-        {
-            return BadRequest();
-        }
+        var userId = GetUserIdFromJWT();
+        var todoItem = await _context.TodoItems
+                            .Where(x => x.UserId == userId && x.Id == id)
+                            .FirstOrDefaultAsync();
 
-        var todoItem = await _context.TodoItems.FindAsync(id);
         if (todoItem == null)
         {
             return NotFound();
@@ -71,18 +71,17 @@ public class TodoItemsController : ControllerBase
 
         return NoContent();
     }
-    // </snippet_Update>
 
     // POST: api/TodoItems
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    // <snippet_Create>
     [HttpPost]
     public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoDTO)
     {
+        var userId = GetUserIdFromJWT();
         var todoItem = new TodoItem
         {
             IsComplete = todoDTO.IsComplete,
-            Name = todoDTO.Name
+            Name = todoDTO.Name,
+            UserId = userId
         };
 
         _context.TodoItems.Add(todoItem);
@@ -93,13 +92,15 @@ public class TodoItemsController : ControllerBase
             new { id = todoItem.Id },
             ItemToDTO(todoItem));
     }
-    // </snippet_Create>
 
     // DELETE: api/TodoItems/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodoItem(long id)
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
+        var userId = GetUserIdFromJWT();
+        var todoItem = await _context.TodoItems
+                            .Where(x => x.UserId == userId && x.Id == id)
+                            .FirstOrDefaultAsync();
         if (todoItem == null)
         {
             return NotFound();
@@ -113,7 +114,8 @@ public class TodoItemsController : ControllerBase
 
     private bool TodoItemExists(long id)
     {
-        return _context.TodoItems.Any(e => e.Id == id);
+        var userId = GetUserIdFromJWT();
+        return _context.TodoItems.Any(e => e.Id == id && e.UserId == userId);
     }
 
     private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
@@ -123,4 +125,14 @@ public class TodoItemsController : ControllerBase
            Name = todoItem.Name,
            IsComplete = todoItem.IsComplete
        };
+    private string GetUserIdFromJWT()
+    {
+        var userId = User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new Exception("User Id not found in JWT token");
+        }
+        return userId;
+    }
+
 }
